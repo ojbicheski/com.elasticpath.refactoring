@@ -16,9 +16,18 @@ import com.elasticpath.refactoring.util.Localized
 
 import com.elasticpath.rules.Result;
 
+rule "only do action if attribute is not null"
+when
+	$paymentMethodDetails: PaymentMethodDetails()
+	
+then
+    System.out.println("Rule fires = " + $paymentMethodDetails.getPaymentType());
+end
+
 rule "GOOGLE_CHECKOUT"
 
-dialect "java"
+dialect "mvel"
+no-loop 
 
 when
 	$paymentMethodDetails: 
@@ -26,11 +35,9 @@ when
 			paymentType == "GOOGLE_CHECKOUT"
 		)
 	
-	$result : Result()
 	$locale : Locale()
+	$result : Result()
 then
-	System.out.println("GOOGLE_CHECKOUT");
-	
 	$result.set(
 		Localized.resolveLocalizedString(
 			FulfillmentMessages.GOOGLE, 
@@ -44,7 +51,8 @@ end
 
 rule "GIFT_CERTIFICATE"
 
-dialect "java"
+dialect "mvel"
+no-loop 
 
 when
 	$paymentMethodDetails : 
@@ -56,8 +64,6 @@ when
 	$authorizationService : AuthorizationService()
 	$locale : Locale()
 then
-	System.out.println("GIFT_CERTIFICATE");
-	
 	// This determines if the user is authorized to see the full gift certificate number or just a masked version
 	if ($authorizationService.isAuthorized(FulfillmentPermissions.VIEW_FULL_CREDITCARD_NUMBER)) {
 		$result.set(
@@ -80,7 +86,8 @@ end
 
 rule "PAYPAL_EXPRESS"
 
-dialect "java"
+dialect "mvel"
+no-loop 
 
 when
 	$paymentMethodDetails : 
@@ -90,8 +97,6 @@ when
 
 	$result : Result()
 then
-	System.out.println("PAYPAL_EXPRESS");
-
 	$result.set(
 		$paymentMethodDetails.getAttributeAsString(
 			PaymentAttributeKey.EMAIL));
@@ -101,7 +106,8 @@ end
 
 rule "RETURN_AND_EXCHANGE"
 
-dialect "java"
+dialect "mvel"
+no-loop 
 
 when
 	$paymentMethodDetails : 
@@ -112,8 +118,6 @@ when
 	$result : Result()
 	$locale : Locale()
 then
-	System.out.println("RETURN_AND_EXCHANGE");
-
 	if ($paymentMethodDetails.getOrderStatus() == OrderStatus.AWAITING_EXCHANGE) {
 		$result.set(
 			Localized.resolveLocalizedString(
@@ -147,8 +151,6 @@ when
 	$locale : Locale()
 	$authorizationService : AuthorizationService()
 then
-	System.out.println("DEFAULT");
-
 	List<String> bindings = new ArrayList<>();
 	bindings.add(
 		$paymentMethodDetails.getAttributeAsString(

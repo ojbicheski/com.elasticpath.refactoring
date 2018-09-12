@@ -22,6 +22,5 @@ public class Result<T> {
 	 */
 	public void set(T value) {
 		this.value = value;
-		System.out.println("SET VALUE: " + value);
 	}
 }

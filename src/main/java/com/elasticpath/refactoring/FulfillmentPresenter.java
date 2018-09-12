@@ -39,10 +39,9 @@ public class FulfillmentPresenter {
 		processor.addFact(AuthorizationService.getInstance());
 		
 		Result<String> result = new Result<String>();
+		processor.addFact(result);
 		
 		processor.fire();
-		
-		//result = (Result<String>) processor.getFact(handler);
 		
 		return result.get();
 	}

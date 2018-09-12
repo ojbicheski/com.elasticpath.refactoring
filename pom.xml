@@ -10,7 +10,7 @@
 	<properties>
 
 		<!-- Drools Properties -->
-		<drools.version>7.3.0.Final</drools.version>
+		<drools.version>7.11.0.Final</drools.version>
 
 		<test.ng.version>6.11</test.ng.version>
 
